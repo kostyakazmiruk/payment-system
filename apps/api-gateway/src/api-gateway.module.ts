@@ -20,7 +20,7 @@ import { ResponseInterceptor } from './utils/response.interceptor';
         useFactory: (configService: ConfigService) => ({
           transport: Transport.RMQ,
           options: {
-            urls: [configService.get<string>('RABBIT_MQ_URI')],
+            urls: [configService.get('rabbitmq')],
             queue: 'transaction_queue',
             queueOptions: {
               durable: true,
@@ -34,7 +34,7 @@ import { ResponseInterceptor } from './utils/response.interceptor';
         useFactory: (configService: ConfigService) => ({
           transport: Transport.RMQ,
           options: {
-            urls: [configService.get<string>('RABBIT_MQ_URI')],
+            urls: [configService.get('rabbitmq')],
             queue: 'payment_queue',
             queueOptions: {
               durable: true,

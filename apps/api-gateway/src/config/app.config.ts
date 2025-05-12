@@ -1,8 +1,44 @@
-import { registerAs } from '@nestjs/config';
+import { Transport } from '@nestjs/microservices';
 
-export default registerAs('app', () => ({
-  port: parseInt(process.env.PORT, 10) || 3000,
-  jwtSecret: process.env.JWT_SECRET || 'your-secret-key',
-  jwtExpiresIn: process.env.JWT_EXPIRES_IN || '1d',
-  rabbitmqUri: process.env.RABBIT_MQ_URI || 'amqp://localhost:5672',
-}));
+export class ConfigService {
+  private readonly envConfig: { [key: string]: any } = null;
+
+  constructor() {
+    this.envConfig = {};
+    this.envConfig.port = process.env.API_GATEWAY_PORT;
+    this.envConfig.rabbitMQ = process.env.RABBIT_MQ_URI;
+    this.envConfig.jwtSecret = process.env.JWT_SECRET;
+    // this.envConfig.tokenService = {
+    //   options: {
+    //     port: process.env.TOKEN_SERVICE_PORT,
+    //     host: process.env.TOKEN_SERVICE_HOST,
+    //   },
+    //   transport: Transport.TCP,
+    // };
+    // this.envConfig.userService = {
+    //   options: {
+    //     port: process.env.USER_SERVICE_PORT,
+    //     host: process.env.USER_SERVICE_HOST,
+    //   },
+    //   transport: Transport.TCP,
+    // };
+    // this.envConfig.taskService = {
+    //   options: {
+    //     port: process.env.TASK_SERVICE_PORT,
+    //     host: process.env.TASK_SERVICE_HOST,
+    //   },
+    //   transport: Transport.TCP,
+    // };
+    // this.envConfig.permissionService = {
+    //   options: {
+    //     port: process.env.PERMISSION_SERVICE_PORT,
+    //     host: process.env.PERMISSION_SERVICE_HOST,
+    //   },
+    //   transport: Transport.TCP,
+    // };
+  }
+
+  get(key: string): any {
+    return this.envConfig[key];
+  }
+}
