@@ -13,15 +13,15 @@ import { GetTransactionHandler } from './application/queries/get-transaction.han
 import { GetTransactionsHandler } from './application/queries/get-transactions.handler';
 
 // Event Handlers
-import { PaymentVerificationFailedHandler } from './infrastructure/messaging/event-handlers/payment-verification-failed.handler';
-import { PaymentVerificationSuccessHandler } from './infrastructure/messaging/event-handlers/payment-verification-success.handler';
+import { PaymentVerificationFailedHandler } from './infrastracture/messaging/event-handlers/payment-verification-failed.handler';
+import { PaymentVerificationSuccessHandler } from './infrastracture/messaging/event-handlers/payment-verification-success.handler';
 
 // Controllers
-import { TransactionController } from './infrastructure/controllers/transaction.controller';
+import { TransactionController } from './infrastracture/controllers/transaction.controller';
 
 // Repositories and Services
-import { PrismaService } from './infrastructure/database/prisma.service';
-import { TransactionRepository } from './infrastructure/database/repositories/transaction.repository';
+import { PrismaService } from './infrastracture/database/prisma.service';
+import { TransactionRepository } from './infrastracture/database/repositories/transaction.repository';
 
 const CommandHandlers = [CreateTransactionHandler, UpdateTransactionHandler];
 
