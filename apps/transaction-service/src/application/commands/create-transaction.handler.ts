@@ -2,7 +2,6 @@ import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { CreateTransactionCommand } from './create-transaction.command';
-import { TransactionRepository } from '../../infrastructure/database/repositories/transaction.repository';
 import {
   Transaction,
   TransactionStatus,
@@ -10,6 +9,7 @@ import {
 } from '../../domain/entities/transaction.entity';
 import { TransactionCreatedEvent } from '../../domain/events/transaction-created.event';
 import { v4 as uuidv4 } from 'uuid';
+import { TransactionRepository } from '../../infrastracture/database/repositories/transaction.repository';
 
 @CommandHandler(CreateTransactionCommand)
 export class CreateTransactionHandler

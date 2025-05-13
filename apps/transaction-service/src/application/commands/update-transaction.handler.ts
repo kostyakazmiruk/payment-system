@@ -1,12 +1,12 @@
 import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
 import { NotFoundException } from '@nestjs/common';
 import { UpdateTransactionCommand } from './update-transaction.command';
-import { TransactionRepository } from '../../infrastructure/database/repositories/transaction.repository';
 import {
   Transaction,
   TransactionStatus,
 } from '../../domain/entities/transaction.entity';
 import { TransactionUpdatedEvent } from '../../domain/events/transaction-updated.event';
+import { TransactionRepository } from '../../infrastracture/database/repositories/transaction.repository';
 
 @CommandHandler(UpdateTransactionCommand)
 export class UpdateTransactionHandler
