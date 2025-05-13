@@ -1,15 +1,12 @@
-FROM node:16-alpine
+FROM node:20
 
 WORKDIR /usr/src/app
 
+# Copy package manager files from the root
 COPY package*.json ./
-
 RUN npm install
 
-COPY . .
+# Copy only the service code
+COPY apps/payment-service/ ./
 
-RUN npm run build
-
-EXPOSE 3000
-
-CMD ["node", "dist/main"]
+CMD ["npm", "run", "start:dev"]

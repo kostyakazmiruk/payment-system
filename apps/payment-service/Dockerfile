@@ -1,18 +1,22 @@
-FROM node:16-alpine
+FROM node:20
 
+# Set working directory to the root of your monorepo
 WORKDIR /usr/src/app
 
+# Copy root-level package manager files
 COPY package*.json ./
-COPY prisma ./prisma/
 
+# Install dependencies from root
 RUN npm install
+
+# Copy only the Prisma schema for code generation
+COPY apps/payment-service/prisma ./prisma/
+
+# Generate Prisma client
 RUN npx prisma generate
 
-COPY . .
+# Switch to the transaction-service directory
+WORKDIR /usr/src/app/apps/transaction-service
 
-RUN npm run build
-
-EXPOSE 3002
-
-CMD ["node", "dist/main"]
-# TODO: docker compose with Pisma would be hard
+# Start service in development mode
+CMD ["npm", "run", "start:dev"]
