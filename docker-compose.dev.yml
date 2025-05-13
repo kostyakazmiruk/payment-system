@@ -35,8 +35,9 @@ services:
       context: .
       dockerfile: apps/api-gateway/Dockerfile
     volumes:
-      - ./apps/api-gateway:/usr/src/app
-      - /usr/src/app/node_modules
+      - ./:/usr/src/app  # Map the entire project instead of just the service
+      - /usr/src/app/node_modules  # Prevent node_modules from being overwritten
+      - /usr/src/app/apps/api-gateway/node_modules
     ports:
       - "3000:3000"
     environment:
@@ -55,8 +56,9 @@ services:
       context: .
       dockerfile: apps/payment-service/Dockerfile
     volumes:
-      - ./apps/payment-service:/usr/src/app
-      - /usr/src/app/node_modules
+      - ./:/usr/src/app  # Map the entire project
+      - /usr/src/app/node_modules  # Prevent node_modules from being overwritten
+      - /usr/src/app/apps/payment-service/node_modules
     ports:
       - "3002:3002"  # Expose HTTP port for direct access
     environment:
@@ -76,8 +78,9 @@ services:
       context: .
       dockerfile: apps/transaction-service/Dockerfile
     volumes:
-      - ./apps/transaction-service:/usr/src/app
-      - /usr/src/app/node_modules
+      - ./:/usr/src/app  # Map the entire project
+      - /usr/src/app/node_modules  # Prevent node_modules from being overwritten
+      - /usr/src/app/apps/transaction-service/node_modules
     ports:
       - "3001:3001"  # Expose HTTP port for direct access
     environment:

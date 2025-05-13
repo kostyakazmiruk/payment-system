@@ -7,6 +7,6 @@ COPY package*.json ./
 RUN npm install
 
 # Copy only the service code
-COPY apps/payment-service/ ./
+COPY apps/api-gateway/ ./
 
 CMD ["npm", "run", "start:dev"]

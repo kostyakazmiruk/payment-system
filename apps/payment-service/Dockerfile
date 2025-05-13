@@ -1,22 +1,18 @@
 FROM node:20
 
-# Set working directory to the root of your monorepo
+# Set working directory
 WORKDIR /usr/src/app
 
-# Copy root-level package manager files
-COPY package*.json ./
+# Copy the entire project
+COPY . .
 
-# Install dependencies from root
+# Install dependencies at the root level
 RUN npm install
 
-# Copy only the Prisma schema for code generation
-COPY apps/payment-service/prisma ./prisma/
-
 # Generate Prisma client
+WORKDIR /usr/src/app/apps/payment-service
 RUN npx prisma generate
 
-# Switch to the transaction-service directory
-WORKDIR /usr/src/app/apps/transaction-service
-
-# Start service in development mode
+# Stay in the transaction service directory
+# Command to run the service
 CMD ["npm", "run", "start:dev"]
