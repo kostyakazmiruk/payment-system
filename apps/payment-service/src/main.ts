@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { PaymentModule } from './payment.module';
+import { PaymentModule } from './payment-service.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
