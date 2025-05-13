@@ -1,0 +1,98 @@
+# docker-compose.dev.yml
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: payment_system
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"  # AMQP protocol port
+      - "15672:15672"  # Management UI port
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api-gateway:
+    build:
+      context: ./apps/api-gateway
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./apps/api-gateway:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - RABBIT_MQ_URI=amqp://guest:guest@rabbitmq:5672
+      - JWT_SECRET=payment-system-dev-secret
+      - JWT_EXPIRES_IN=1d
+      - NODE_ENV=development
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    command: npm run start:dev
+
+  payment-service:
+    build:
+      context: ./apps/payment-service
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./apps/payment-service:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "3002:3002"  # Expose HTTP port for direct access
+    environment:
+      - PORT=3002
+      - RABBIT_MQ_URI=amqp://guest:guest@rabbitmq:5672
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/payment_system?schema=public
+      - NODE_ENV=development
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    command: npm run start:dev
+
+  transaction-service:
+    build:
+      context: ./apps/transaction-service
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./apps/transaction-service:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "3001:3001"  # Expose HTTP port for direct access
+    environment:
+      - PORT=3001
+      - RABBIT_MQ_URI=amqp://guest:guest@rabbitmq:5672
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/payment_system?schema=public
+      - NODE_ENV=development
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    command: npm run start:dev
+
+volumes:
+  postgres_data:
